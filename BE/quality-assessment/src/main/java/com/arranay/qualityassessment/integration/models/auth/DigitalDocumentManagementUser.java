@@ -1,9 +1,6 @@
-package com.arranay.qualityassessment.quality_assessment.models;
+package com.arranay.qualityassessment.integration.models.auth;
 
-import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementSystemState;
-
-public class User {
-    private DigitalDocumentManagementSystemState systemState;
+public class DigitalDocumentManagementUser {
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -11,16 +8,14 @@ public class User {
     private String createdAt;
     private String email;
 
-    public User() {}
-
-    public User(
+    public DigitalDocumentManagementUser() {}
+    public DigitalDocumentManagementUser(
             String firstName,
             String lastName,
             String phoneNumber,
             String icon,
             String createdAt,
-            String email,
-            DigitalDocumentManagementSystemState state
+            String email
     ) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -28,7 +23,6 @@ public class User {
         this.icon = icon;
         this.email = email;
         this.createdAt = createdAt;
-        this.systemState = state;
     }
 
     public String getFirstName() { return this.firstName; }
@@ -37,7 +31,6 @@ public class User {
     public String getIcon() { return this.icon; }
     public String getEmail() { return this.email; }
     public String getCreatedAt() { return this.createdAt; }
-    public DigitalDocumentManagementSystemState getSystemState() { return this.systemState; }
 
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
@@ -45,5 +38,4 @@ public class User {
     public void setIcon(String icon) { this.icon = icon; }
     public void setEmail(String email) { this.email = email; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
-    public void setSystemState(DigitalDocumentManagementSystemState systemState) { this.systemState = systemState; }
 }
