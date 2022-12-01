@@ -1,33 +1,30 @@
 package com.arranay.qualityassessment.integration.services.auth;
 
-import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementSystem;
-import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementSystemState;
-import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementLogin;
-import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementUser;
+import com.arranay.qualityassessment.integration.models.auth.*;
+import com.arranay.qualityassessment.integration.services.IntegrationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
+import java.util.Arrays;
 
 @Service
-public class DigitalDocumentManagementAuth {
+public class DigitalDocumentManagementAuthService {
+
     private static String email;
     private static String password;
-    private static WebClient webClient;
 
-    public DigitalDocumentManagementAuth(
-            @Value("${digital_document_management_system.url}") String systemUrl,
+    public DigitalDocumentManagementAuthService(
             @Value("${digital_document_management_system.email}") String systemEmail,
             @Value("${digital_document_management_system.password}") String systemPassword
     ) {
         email = systemEmail;
         password = systemPassword;
-
-        webClient = WebClient.builder().baseUrl(systemUrl).build();
     }
 
     public static DigitalDocumentManagementSystemState getSystemState() {
-        DigitalDocumentManagementSystem system = webClient.get()
+        DigitalDocumentManagementSystem system = IntegrationService.getWebClient().get()
                 .uri("api/system-state")
                 .retrieve()
                 .bodyToMono(DigitalDocumentManagementSystem.class)
@@ -38,11 +35,19 @@ public class DigitalDocumentManagementAuth {
 
     public static DigitalDocumentManagementUser Login() {
         DigitalDocumentManagementLogin login = new DigitalDocumentManagementLogin(email, password);
-        return webClient.post()
+
+        return IntegrationService.getWebClient().post()
                 .uri("api/auth/login")
                 .body(Mono.just(login), DigitalDocumentManagementLogin.class)
-                .retrieve()
-                .bodyToMono(DigitalDocumentManagementUser.class)
+                .exchangeToMono(response -> {
+                    MultiValueMap<String, String> myCookies = new LinkedMultiValueMap<String, String>();
+                    for (String key: response.cookies().keySet()) {
+                        myCookies.put(key, Arrays.asList(response.cookies().get(key).get(0).getValue()));
+                    }
+                    IntegrationService.setMyCookies(myCookies);
+
+                    return response.bodyToMono(DigitalDocumentManagementUser.class);
+                })
                 .block();
     }
 }
