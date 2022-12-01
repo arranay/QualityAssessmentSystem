@@ -1,1 +1,12 @@
-<p>dashboard works!</p>
+<nav class="navbar navbar-dark bg-primary">
+  <a class="navbar-brand" disabled="true" style="margin-left: 16px">QualityAssessmentSystem</a>
+
+  <div class="d-flex align-items-end flex-column" style="flex: 1">
+    <a class="nav-link" disabled="true">System state: {{user?.systemState}}</a>
+    <a class="nav-link" disabled="true">User: {{user?.firstName}} {{user?.lastName}}</a>
+  </div>
+
+  <div class="my-2 my-sm-0">
+    <button class="btn btn btn-light" style="margin-right: 16px; margin-left: 16px" type="submit">Logout</button>
+  </div>
+</nav>

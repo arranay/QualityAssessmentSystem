@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {AuthService} from "./auth.service";
-import {LoginModel} from "../shared/login.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-auth',
@@ -20,7 +20,8 @@ export class AuthComponent {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: Router
   ) {
   }
 
@@ -28,7 +29,7 @@ export class AuthComponent {
     this.form.markAsTouched()
     if (this.form.valid) this.authService.login(this.form.getRawValue())
       .subscribe(
-        res => {},
+        () => this.route.navigateByUrl('dashboard'),
         error => this.handlerError(error)
       )
   }
