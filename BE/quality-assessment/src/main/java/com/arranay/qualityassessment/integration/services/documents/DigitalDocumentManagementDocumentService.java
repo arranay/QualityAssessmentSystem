@@ -1,40 +1,38 @@
 package com.arranay.qualityassessment.integration.services.documents;
 
 import com.arranay.qualityassessment.integration.models.documents.CreateDocumentModel;
-import com.arranay.qualityassessment.integration.models.documents.DocumentValues;
+import com.arranay.qualityassessment.integration.models.documents.DocumentModel;
 import com.arranay.qualityassessment.integration.services.IntegrationService;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DigitalDocumentManagementDocumentService {
 
-    public static CreateDocumentModel createDocument() {
-        ArrayList<DocumentValues> values = new ArrayList<DocumentValues>();
-        DocumentValues value = new DocumentValues("test", "test");
-        values.add(value);
+    public static Flux createDocuments(List<CreateDocumentModel> documents) {
+        return Flux.fromIterable(documents).flatMap(DigitalDocumentManagementDocumentService::createDocument);
+    }
+    public static Flux issueDocuments(List<String> documentIds) {
+        return Flux.fromIterable(documentIds).flatMap(DigitalDocumentManagementDocumentService::issueDocument);
+    }
 
-        CreateDocumentModel document = new CreateDocumentModel(
-                "document test",
-                values,
-                "63871f5aa9cada004241061c",
-                "632b05d1d1f77a004283a607",
-                "632b05d1d1f77a004283a607",
-                null,
-                null
-        );
+    private static Mono<DocumentModel> createDocument(CreateDocumentModel document) {
         return IntegrationService.getWebClient().post()
                 .uri("api/documents")
                 .cookies(cookies -> cookies.addAll(IntegrationService.getMyCookies()))
                 .body(Mono.just(document), CreateDocumentModel.class)
                 .retrieve()
-                .bodyToMono(CreateDocumentModel.class)
-                .block();
+                .bodyToMono(DocumentModel.class);
     }
 
-    public void issueDocument() {
-
+    private static Mono<DocumentModel> issueDocument(String id) {
+        return IntegrationService.getWebClient().post()
+                .uri("api/documents/" + id + "/issue")
+                .cookies(cookies -> cookies.addAll(IntegrationService.getMyCookies()))
+                .retrieve()
+                .bodyToMono(DocumentModel.class);
     }
 }
