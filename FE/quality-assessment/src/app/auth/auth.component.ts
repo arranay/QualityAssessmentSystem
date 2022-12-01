@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {AuthService} from "./auth.service";
+import {LoginModel} from "../shared/login.model";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-auth',
@@ -7,4 +12,28 @@ import { Component } from '@angular/core';
 })
 export class AuthComponent {
 
+  form = this.fb.group({
+    login: [null, Validators.required],
+    password: [null, Validators.required],
+  });
+
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
+    private authService: AuthService
+  ) {
+  }
+
+  submit() {
+    this.form.markAsTouched()
+    if (this.form.valid) this.authService.login(this.form.getRawValue())
+      .subscribe(
+        res => {},
+        error => this.handlerError(error)
+      )
+  }
+
+  handlerError(error: HttpErrorResponse) {
+    this.toastr.error(error.error.message);
+  }
 }

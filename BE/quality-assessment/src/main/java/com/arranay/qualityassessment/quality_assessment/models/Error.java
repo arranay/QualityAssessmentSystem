@@ -4,17 +4,17 @@ import org.springframework.http.HttpStatus;
 
 public class Error {
     HttpStatus code;
-    String msg;
+    String message;
 
     public Error() {};
-    public Error(HttpStatus code, String msg) {
+    public Error(HttpStatus code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     public HttpStatus getCode() { return code; }
-    public String getMsg() { return msg; }
+    public String getMessage() { return message; }
 
     public void setCode(HttpStatus code) { this.code = code; }
-    public void setMsg(String msg) { this.msg = msg; }
+    public void setMessage(String message) { this.message = message; }
 }

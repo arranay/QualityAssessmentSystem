@@ -4,7 +4,7 @@ public class Error {
     String code;
 
     public Error() {};
-    public Error(String code, String msg) {
+    public Error(String code, String message) {
         this.code = code;
     }
 
