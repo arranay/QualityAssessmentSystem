@@ -13,10 +13,10 @@ import java.util.List;
 public class DigitalDocumentManagementDocumentService {
 
     public static Flux createDocuments(List<CreateDocumentModel> documents) {
-        return Flux.fromIterable(documents).flatMap(DigitalDocumentManagementDocumentService::createDocument);
+        return Flux.fromIterable(documents).flatMapSequential(DigitalDocumentManagementDocumentService::createDocument);
     }
     public static Flux issueDocuments(List<String> documentIds) {
-        return Flux.fromIterable(documentIds).flatMap(DigitalDocumentManagementDocumentService::issueDocument);
+        return Flux.fromIterable(documentIds).flatMapSequential(DigitalDocumentManagementDocumentService::issueDocument);
     }
 
     private static Mono<DocumentModel> createDocument(CreateDocumentModel document) {

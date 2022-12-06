@@ -44,4 +44,5 @@ public enum DocumentStatus {
     public String toString(){
         return this.value;
     }
+    // TODO fromString
 }
