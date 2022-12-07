@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {LoginModel} from "../shared/login.model";
+import {LoginModel} from "../shared/models/login.model";
 import {environment} from "../../environments/environment";
 import {Observable, tap} from "rxjs";
-import {UserModel} from "../shared/user.model";
+import {UserModel} from "../shared/models/user.model";
 
 @Injectable({
   providedIn: 'root'

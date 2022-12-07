@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../auth/auth.service";
-import {UserModel} from "../shared/user.model";
+import {UserModel} from "../shared/models/user.model";
+import {DashboardService} from "./dashboard.service";
+import { BsModalService } from 'ngx-bootstrap/modal';
+import {NewTestComponent} from "./new-test/new-test.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +14,9 @@ export class DashboardComponent implements OnInit{
   public user: UserModel | null = null;
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private dashboardService: DashboardService,
+    private modalService: BsModalService,
   ) {
   }
 
@@ -19,4 +24,7 @@ export class DashboardComponent implements OnInit{
     this.user = this.authService.getUserInfo();
   }
 
+  start() {
+    this.modalService.show(NewTestComponent, { class: 'modal-lg' });
+  }
 }

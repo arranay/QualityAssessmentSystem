@@ -9,22 +9,32 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from '@angular/common/http';
 import {ToastrModule} from "ngx-toastr";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { NewTestComponent } from './dashboard/new-test/new-test.component';
+import {TooltipModule} from "ngx-bootstrap/tooltip";
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ModalModule, BsModalService } from 'ngx-bootstrap/modal';
+import {NgSelectModule} from "@ng-select/ng-select";
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
-    DashboardComponent
+    DashboardComponent,
+    NewTestComponent
   ],
-  imports: [
-    ToastrModule.forRoot(),
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule
-  ],
-  providers: [],
+    imports: [
+        ToastrModule.forRoot(),
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        HttpClientModule,
+        ReactiveFormsModule,
+        NgxSpinnerModule,
+        ModalModule,
+        TooltipModule.forRoot(),
+        NgSelectModule
+    ],
+  providers: [BsModalService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
