@@ -3,6 +3,7 @@ package com.arranay.qualityassessment.integration.services.documents;
 import com.arranay.qualityassessment.integration.models.documents.CreateDocumentModel;
 import com.arranay.qualityassessment.integration.models.documents.DocumentModel;
 import com.arranay.qualityassessment.integration.services.IntegrationService;
+import com.arranay.qualityassessment.quality_assessment.db_models.DocumentItem;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,7 +24,7 @@ public class DigitalDocumentManagementDocumentService {
         return IntegrationService.getWebClient().post()
                 .uri("api/documents")
                 .cookies(cookies -> cookies.addAll(IntegrationService.getMyCookies()))
-                .body(Mono.just(document), CreateDocumentModel.class)
+                .body(Mono.just(document), DocumentItem.class)
                 .retrieve()
                 .bodyToMono(DocumentModel.class);
     }

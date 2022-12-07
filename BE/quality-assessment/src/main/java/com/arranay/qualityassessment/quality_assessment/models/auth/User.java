@@ -1,4 +1,4 @@
-package com.arranay.qualityassessment.quality_assessment.models;
+package com.arranay.qualityassessment.quality_assessment.models.auth;
 
 import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementSystemState;
 

@@ -4,8 +4,8 @@ import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentMana
 import com.arranay.qualityassessment.integration.models.auth.DigitalDocumentManagementUser;
 import com.arranay.qualityassessment.integration.services.auth.DigitalDocumentManagementAuthService;
 import com.arranay.qualityassessment.quality_assessment.models.Error;
-import com.arranay.qualityassessment.quality_assessment.models.Login;
-import com.arranay.qualityassessment.quality_assessment.models.User;
+import com.arranay.qualityassessment.quality_assessment.models.auth.Login;
+import com.arranay.qualityassessment.quality_assessment.models.auth.User;
 import com.arranay.qualityassessment.quality_assessment.services.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

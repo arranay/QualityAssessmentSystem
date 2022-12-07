@@ -1,4 +1,4 @@
-package com.arranay.qualityassessment.quality_assessment.models;
+package com.arranay.qualityassessment.quality_assessment.models.auth;
 
 public class Login {
     private String login;

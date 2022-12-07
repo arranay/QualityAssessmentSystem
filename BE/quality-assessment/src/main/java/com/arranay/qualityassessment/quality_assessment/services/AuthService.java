@@ -1,6 +1,6 @@
 package com.arranay.qualityassessment.quality_assessment.services;
 
-import com.arranay.qualityassessment.quality_assessment.models.Login;
+import com.arranay.qualityassessment.quality_assessment.models.auth.Login;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

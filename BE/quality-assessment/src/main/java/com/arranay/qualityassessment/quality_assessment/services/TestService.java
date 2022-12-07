@@ -2,12 +2,15 @@ package com.arranay.qualityassessment.quality_assessment.services;
 
 import com.arranay.qualityassessment.integration.models.documents.CreateDocumentModel;
 import com.arranay.qualityassessment.integration.models.documents.DocumentModel;
-import com.arranay.qualityassessment.integration.models.documents.DocumentValues;
 import com.arranay.qualityassessment.integration.models.verifications.CreateVerificationModel;
-import com.arranay.qualityassessment.integration.models.verifications.TemplateModel;
 import com.arranay.qualityassessment.integration.models.verifications.VerificationModel;
 import com.arranay.qualityassessment.integration.services.documents.DigitalDocumentManagementDocumentService;
 import com.arranay.qualityassessment.integration.services.verifications.DigitalDocumentManagementVerificationService;
+import com.arranay.qualityassessment.quality_assessment.db_models.DocumentItem;
+import com.arranay.qualityassessment.quality_assessment.db_models.VerificationItem;
+import com.arranay.qualityassessment.quality_assessment.models.test.CreateTestModel;
+import com.arranay.qualityassessment.quality_assessment.repositories.DocumentRepository;
+import com.arranay.qualityassessment.quality_assessment.repositories.VerificationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,79 +19,85 @@ import java.util.List;
 @Service
 public class TestService {
 
-    public static void createDocuments() {
-        List<CreateDocumentModel> documents = new ArrayList<>();
-        documents.add(getDocumentMock("demo doc 1"));
-        documents.add(getDocumentMock("demo doc 2"));
-        documents.add(getDocumentMock("demo doc 3"));
+    private static DocumentRepository docRepository;
+    private static VerificationRepository verRepository;
 
+    public TestService(
+            DocumentRepository newDocRepository,
+            VerificationRepository newVerRepository
+    ) {
+        docRepository = newDocRepository;
+        verRepository = newVerRepository;
+    }
+
+    public static void createTest(CreateTestModel createModel) {
+        List<String> docIds = new ArrayList<>();
+        List<String> verIds = new ArrayList<>();
+
+        createModel.getDocuments().forEach(doc -> docIds.add(doc.getId()));
+        createModel.getVerifications().forEach(doc -> verIds.add(doc.getId()));
+
+        List<DocumentItem> documents = docRepository.findAllById(docIds);
+        List<VerificationItem> verifications = verRepository.findAllById(verIds);
+
+        List<CreateDocumentModel> createDocumentModels = new ArrayList<>();
+        documents.forEach(doc -> createDocumentModels.add(new CreateDocumentModel(
+                doc.getName(),
+                doc.getValues(),
+                doc.getTemplateId(),
+                doc.getIssuerWalletId(),
+                doc.getOwnerWalletId(),
+                doc.getOwnerWalletConnectionId(),
+                doc.getIssuerWalletConnectionId()
+        )));
+
+        List<CreateVerificationModel> createVerificationModels = new ArrayList<>();
+        verifications.forEach(doc -> createVerificationModels.add(new CreateVerificationModel(
+                doc.getName(),
+                doc.getDescription(),
+                doc.getAdditionalTemplates(),
+                doc.getVerificationFlowTemplates(),
+                doc.getHolderWalletId(),
+                doc.getHolderWalletConnectionId(),
+                doc.getVerifiedWithId(),
+                doc.getVerificationFlowId()
+        )));
+
+        createDocuments(createDocumentModels);
+        createVerifications(createVerificationModels);
+    }
+
+    private static void createDocuments(List<CreateDocumentModel> createDocumentModels) {
         List<DocumentModel> createdDocuments = (List<DocumentModel>) DigitalDocumentManagementDocumentService
-                .createDocuments(documents)
+                .createDocuments(createDocumentModels)
                 .collectList()
                 .block();
 
         if (createdDocuments != null) {
-            while (
-                    createdDocuments.size() !=0 &&
-                    !createdDocuments.removeIf(s -> s.getStatus().equals("done"))
-            ) {
+            while (createdDocuments.size() !=0) {
                 List<String> documentIds = new ArrayList<>();
-                createdDocuments.forEach(documentModel -> {
-                    if (documentModel.getStatus().equals("draft")) documentIds.add(documentModel.get_id());
-                });
+                createdDocuments.forEach(documentModel -> documentIds.add(documentModel.get_id()));
 
-                createdDocuments = (List<DocumentModel>) DigitalDocumentManagementDocumentService
+                List<DocumentModel> issuedDocuments = (List<DocumentModel>) DigitalDocumentManagementDocumentService
                         .issueDocuments(documentIds)
                         .collectList()
                         .block();
+
+
+                List<String> issuedDocIds = new ArrayList<>();
+                issuedDocuments.forEach(documentModel -> {
+                    if (documentModel.getStatus().equals("draft")) issuedDocIds.add(documentModel.get_id());
+                });
+                createdDocuments.removeIf(s -> !issuedDocIds.contains(s.get_id()));
             }
 
         }
     }
 
-    public static void createVerifications() {
-        List<CreateVerificationModel> verifications = new ArrayList<>();
-        verifications.add(getVerificationMock("demo ver 1"));
-        verifications.add(getVerificationMock("demo ver 2"));
-        verifications.add(getVerificationMock("demo ver 3"));
-
+    public static void createVerifications(List<CreateVerificationModel> createVerificationModels) {
         List<VerificationModel> createdVerifications = (List<VerificationModel>) DigitalDocumentManagementVerificationService
-                .sendVerifications(verifications)
+                .sendVerifications(createVerificationModels)
                 .collectList()
                 .block();
-
-        createdVerifications.forEach(ver -> System.out.println(ver));
-    }
-
-    private static CreateDocumentModel getDocumentMock(String name) {
-        ArrayList<DocumentValues> values = new ArrayList<DocumentValues>();
-        DocumentValues value = new DocumentValues("test", "test");
-        values.add(value);
-
-        return new CreateDocumentModel(
-                name,
-                values,
-                "63871f5aa9cada004241061c",
-                "632b05d1d1f77a004283a607",
-                "632b05d1d1f77a004283a607",
-                null,
-                null
-        );
-    }
-
-    private static CreateVerificationModel getVerificationMock(String name) {
-        ArrayList<TemplateModel> additionalTemplates = new ArrayList<TemplateModel>();
-        ArrayList<TemplateModel> verificationFlowTemplates = new ArrayList<TemplateModel>();
-
-        return new CreateVerificationModel(
-                name,
-                "any description",
-                additionalTemplates,
-                verificationFlowTemplates,
-                "632b05d1d1f77a004283a607",
-                null,
-                "632b05d1d1f77a004283a607",
-                "638f1164dacc71004277ee6e"
-        );
     }
 }
