@@ -4,7 +4,7 @@ import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 import { DocumentModel } from "../shared/models/document.model";
 import { VerificationModel } from "../shared/models/verification.model";
-import {CreateTestModel, Test} from "../shared/models/test.model";
+import { CreateTestModel, Test } from "../shared/models/test.model";
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +25,9 @@ export class DashboardService {
 
   createTest(test: CreateTestModel): Observable<Test> {
     return this.http.post<Test>(`${environment.endPoint}/test`, test);
+  }
+
+  getAllTests(): Observable<any> {
+    return this.http.get<any>(`${environment.endPoint}/test`);
   }
 }

@@ -7,13 +7,137 @@
   </div>
 
   <div class="my-2 my-sm-0">
-    <button class="btn btn btn-light" style="margin-right: 16px; margin-left: 16px" type="submit">Logout</button>
+    <button class="btn btn btn-light" routerLink="" style="margin-right: 16px; margin-left: 16px" type="submit">Logout</button>
   </div>
 </nav>
 
 <div class="m-3">
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-between">
+    <select class="form-control" style="width: 300px" [(ngModel)]="testId" (ngModelChange)="change($event)">
+      <option *ngFor="let test of tests" [value]="test.id">
+        {{ test.name }}: {{ test.createAt | date: "dd-mm-YY HH:mm:ss:ms" }}
+      </option>
+    </select>
+
     <button class="btn btn-primary" (click)="start()">Start new check</button>
   </div>
 </div>
 
+<div class="m-3">
+  <div class="d-flex flex-row mt-2 d-flex">
+    <div class="card" style="margin-right: 5px">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Documents info</h5>
+        <p class="card-text">Statistics by statuses</p>
+
+        <ngx-donut-chart
+          *ngIf="documentsChartData.length > 0"
+          [chartData]='documentsChartData'
+          [view]='pieView'
+          [chartOptions]='chartOptions'
+        ></ngx-donut-chart>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Verifications info</h5>
+        <p class="card-text">Statistics by statuses</p>
+
+        <ngx-donut-chart
+          *ngIf="verificationsChartData.length > 0"
+          [chartData]='verificationsChartData'
+          [view]='pieView'
+          [chartOptions]='chartOptions'
+        ></ngx-donut-chart>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row mt-2 d-flex">
+    <div class="card" style="margin-right: 5px">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Documents info</h5>
+        <p class="card-text">Count of documents</p>
+
+        {{ getTest()?.documentsCount }}
+      </div>
+    </div>
+
+    <div class="card" style="margin-right: 5px">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Documents info</h5>
+        <p class="card-text">Success date</p>
+
+        {{ getTest()?.successDocumentsRate }}%
+      </div>
+    </div>
+
+    <div class="card" style="margin-right: 5px">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Verifications info</h5>
+        <p class="card-text">Count of documents</p>
+
+        {{ getTest()?.verificationsCount }}
+      </div>
+    </div>
+
+    <div class="card" style="margin-right: 5px">
+      <div class="card-body" style="flex: 1">
+        <h5 class="card-title">Verifications info</h5>
+        <p class="card-text">Success date</p>
+
+        {{ getTest()?.successVerificationsRate }}%
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="m-3">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">General info</h5>
+
+      <div class="row mb-2">
+        <div class="col-12 col-lg-6">
+          <div class="ll-form-row">
+            <label class="ll-form-label" translate>Name</label>
+            <div class="ll-form-control">{{ getTest()?.name }}</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="ll-form-row">
+            <label class="ll-form-label" translate></label>
+            <div class="ll-form-control"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-12 col-lg-6">
+          <div class="ll-form-row">
+            <label class="ll-form-label" translate>Start</label>
+            <div class="ll-form-control">{{getTest()?.createAt | date: "dd-mm-YY HH:mm:ss:ms"}}</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <div class="ll-form-row">
+            <label class="ll-form-label" translate>End</label>
+            <div class="ll-form-control">{{getTest()?.finishAt | date: "dd-mm-YY HH:mm:ss:ms"}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ngx-spinner
+  type="ball-scale-multiple"
+  color="#0d6efd"
+  bdColor="rgba(255, 255, 255, 0.7)"
+  size="default"
+  [fullScreen]="false"
+  name="tests"
+></ngx-spinner>

@@ -15,6 +15,7 @@ public class TestItem {
 
     private String name;
     private Date createAt;
+    private Date finishAt;
 
     private List<DocumentModel> documents;
     private List<VerificationModel> verifications;
@@ -22,11 +23,13 @@ public class TestItem {
     public TestItem(
             String name,
             Date createAt,
+            Date finishAt,
             List<DocumentModel> documents,
             List<VerificationModel> verifications)
     {
         this.name = name;
         this.createAt = createAt;
+        this.finishAt = finishAt;
         this.documents = documents;
         this.verifications = verifications;
     }
@@ -69,5 +72,13 @@ public class TestItem {
 
     public void setVerifications(List<VerificationModel> verifications) {
         this.verifications = verifications;
+    }
+
+    public Date getFinishAt() {
+        return finishAt;
+    }
+
+    public void setFinishAt(Date finishAt) {
+        this.finishAt = finishAt;
     }
 }

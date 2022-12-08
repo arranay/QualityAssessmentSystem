@@ -1,7 +1,8 @@
 package com.arranay.qualityassessment.quality_assessment.controllers;
 
 import com.arranay.qualityassessment.quality_assessment.models.test.CreateTestModel;
-import com.arranay.qualityassessment.quality_assessment.services.TestService;
+import com.arranay.qualityassessment.quality_assessment.services.CreateTestService;
+import com.arranay.qualityassessment.quality_assessment.services.GetTestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class TestController {
     @PostMapping()
     public ResponseEntity<Object> startCheck(@RequestBody CreateTestModel createModel) {
         try {
-            TestService.createTest(createModel);
+            CreateTestService.createTest(createModel);
             return new ResponseEntity<Object>(null, HttpStatus.OK);
         } catch (ResponseStatusException exception) {
             return new ResponseEntity<Object>(null, exception.getStatusCode());
@@ -22,6 +23,6 @@ public class TestController {
     }
 
     @GetMapping ResponseEntity<Object> getAllCheck() {
-        return new ResponseEntity<Object>(null, HttpStatus.OK);
+        return new ResponseEntity<Object>(GetTestService.getAll(), HttpStatus.OK);
     }
 }

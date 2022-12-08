@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {DashboardService} from "../dashboard.service";
 import {DocumentModel} from "../../shared/models/document.model";
 import {VerificationModel} from "../../shared/models/verification.model";
@@ -15,6 +15,8 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ['./new-test.component.less']
 })
 export class NewTestComponent implements OnInit {
+  @Output() close: EventEmitter<any> = new EventEmitter();
+
   documents: DocumentModel[] = [];
   verifications: VerificationModel[] = [];
 
@@ -69,7 +71,10 @@ export class NewTestComponent implements OnInit {
       })
         .pipe(finalize(() => this.spinner.hide('test')))
         .subscribe(
-          () => this.bsModalRef.hide(),
+          () => {
+            this.bsModalRef.hide();
+            this.close.next(true);
+          },
           error => this.toastrService.error(error.message)
         );
     }

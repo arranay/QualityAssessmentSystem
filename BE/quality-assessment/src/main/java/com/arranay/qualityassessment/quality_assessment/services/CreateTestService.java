@@ -20,13 +20,13 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TestService {
+public class CreateTestService {
 
     private static DocumentRepository docRepository;
     private static VerificationRepository verRepository;
     private static TestRepository testRepository;
 
-    public TestService(
+    public CreateTestService(
             DocumentRepository newDocRepository,
             VerificationRepository newVerRepository,
             TestRepository newTestRepository
@@ -37,6 +37,7 @@ public class TestService {
     }
 
     public static void createTest(CreateTestModel createModel) {
+        Date startDate = new Date();
         List<CreateDocumentModel> createDocumentModels = new ArrayList<>();
         createModel.getDocuments().forEach(model -> {
             DocumentItem doc = docRepository.findById(model.getId()).orElse(new DocumentItem());
@@ -75,6 +76,7 @@ public class TestService {
 
         TestItem test = new TestItem(
                 createModel.getName(),
+                startDate,
                 new Date(),
                 documentModelList,
                 verificationModelList
@@ -88,7 +90,7 @@ public class TestService {
                 .collectList()
                 .block();
 
-        List<DocumentModel> documents = createdDocuments;
+        List<DocumentModel> documents = new ArrayList<>();
         if (createdDocuments != null) {
             while (createdDocuments.size() !=0) {
                 List<String> documentIds = new ArrayList<>();
@@ -99,10 +101,10 @@ public class TestService {
                         .collectList()
                         .block();
 
-
                 List<String> issuedDocIds = new ArrayList<>();
                 issuedDocuments.forEach(documentModel -> {
                     if (documentModel.getStatus().equals("draft")) issuedDocIds.add(documentModel.get_id());
+                    else documents.add(documentModel);
                 });
                 createdDocuments.removeIf(s -> !issuedDocIds.contains(s.get_id()));
             }
