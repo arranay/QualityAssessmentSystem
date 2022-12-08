@@ -19,6 +19,7 @@ public class VerificationItem {
     private String verifiedWithId;
     private String verificationFlowId;
 
+    public VerificationItem() {}
     public VerificationItem(
             String name,
             String description,

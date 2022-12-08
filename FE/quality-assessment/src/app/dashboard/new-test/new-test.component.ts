@@ -6,6 +6,8 @@ import {BsModalRef} from "ngx-bootstrap/modal";
 import {NgxSpinnerService} from "ngx-spinner";
 import {FormBuilder, Validators} from "@angular/forms";
 import {CreateTestModel} from "../../shared/models/test.model";
+import {finalize} from "rxjs";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-new-test',
@@ -36,6 +38,7 @@ export class NewTestComponent implements OnInit {
     private spinner: NgxSpinnerService,
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
+    private toastrService: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -55,18 +58,20 @@ export class NewTestComponent implements OnInit {
     await this.spinner.hide('test')
   }
 
-  start() {
-    if (this.form.valid ){
+  async start() {
+    if (this.form.valid) {
+      await this.spinner.show('test');
       const test = this.form.getRawValue();
       this.dashboardService.createTest({
         name: test.name!,
         documents: test.documentsForm.filter(doc => doc.id && doc.count),
         verifications: test.verificationsForm.filter(doc => doc.id && doc.count)
       })
+        .pipe(finalize(() => this.spinner.hide('test')))
         .subscribe(
-          () => {},
-          error => {}
-        )
+          () => this.bsModalRef.hide(),
+          error => this.toastrService.error(error.message)
+        );
     }
   }
 

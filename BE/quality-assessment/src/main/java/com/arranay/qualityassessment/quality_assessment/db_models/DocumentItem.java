@@ -19,6 +19,7 @@ public class DocumentItem {
     private String ownerWalletConnectionId;
     private String issuerWalletConnectionId;
 
+    public DocumentItem() {}
     public DocumentItem(
             String name,
             ArrayList<DocumentValues> values,
