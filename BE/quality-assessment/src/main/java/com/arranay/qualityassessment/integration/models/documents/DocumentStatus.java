@@ -1,48 +1,42 @@
 package com.arranay.qualityassessment.integration.models.documents;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum DocumentStatus {
-    DRAFT(0, "draft"),
-    PROPOSAL_SENT(1, "proposal-sent"),
-    PROPOSAL_RECEIVED(2, "proposal-received"),
-    OFFER_SENT(3, "offer-sent"),
-    OFFER_RECEIVED(4, "offer-received"),
-    DECLINED(5, "declined"),
-    REQUEST_SENT(6, "request-sent"),
-    REQUEST_RECEIVED(7, "request-received"),
-    CREDENTIAL_ISSUED(8, "credential-issued"),
-    CREDENTIAL_RECEIVED(9, "credential-received"),
-    DONE(10, "done"),
-    REVOKED(11, "revoked"),
-    ERROR(12, "error"),
-    TIMEOUT_EXPIRED(13, "timeout-expired");
+    DRAFT("draft"),
+    PROPOSAL_SENT("proposal-sent"),
+    PROPOSAL_RECEIVED("proposal-received"),
+    OFFER_SENT("offer-sent"),
+    OFFER_RECEIVED("offer-received"),
+    DECLINED("declined"),
+    REQUEST_SENT("request-sent"),
+    REQUEST_RECEIVED("request-received"),
+    CREDENTIAL_ISSUED("credential-issued"),
+    CREDENTIAL_RECEIVED("credential-received"),
+    DONE("done"),
+    REVOKED("revoked"),
+    ERROR("error"),
+    TIMEOUT_EXPIRED("timeout-expired");
 
-    private int key;
-    private String value;
+    private final String abbreviation;
+    private static final Map<String, DocumentStatus> lookup = new HashMap<String, DocumentStatus>();
 
-    DocumentStatus(int key, String value){
-        this.key = key;
-        this.value = value;
+    static {
+        for (DocumentStatus d : DocumentStatus.values()) {
+            lookup.put(d.getAbbreviation(), d);
+        }
     }
 
-    public int getKey() {
-        return key;
+    private DocumentStatus(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
-    public void setKey(int key) {
-        this.key = key;
+    public String getAbbreviation() {
+        return abbreviation;
     }
 
-    public String getValue() {
-        return value;
+    public static DocumentStatus get(String abbreviation) {
+        return lookup.get(abbreviation);
     }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString(){
-        return this.value;
-    }
-    // TODO fromString
 }

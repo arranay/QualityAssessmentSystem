@@ -1,6 +1,7 @@
 package com.arranay.qualityassessment.quality_assessment.services;
 
 import com.arranay.qualityassessment.integration.models.documents.DocumentModel;
+import com.arranay.qualityassessment.integration.models.documents.DocumentStatus;
 import com.arranay.qualityassessment.integration.models.verifications.VerificationModel;
 import com.arranay.qualityassessment.quality_assessment.db_models.TestItem;
 import com.arranay.qualityassessment.quality_assessment.models.test.TestView;
@@ -29,7 +30,7 @@ public class GetTestService {
 
             List<DocumentModel> doneDocuments = new ArrayList<>();
             test.getDocuments().forEach(doc -> {
-                if (Objects.equals(doc.getStatus(), "done"))
+                if (doc.getStatus().equals(DocumentStatus.DONE))
                     doneDocuments.add(doc);
             });
             List<VerificationModel> successfulVerifications = new ArrayList<>();

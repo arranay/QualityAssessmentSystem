@@ -2,13 +2,13 @@ package com.arranay.qualityassessment.integration.models.documents;
 
 public class DocumentModel {
     private String _id;
-    private String status;
+    private DocumentStatus status;
     private String name;
 
     DocumentModel() {}
     DocumentModel(
             String _id,
-            String status,
+            DocumentStatus status,
             String name
     ) {
         this._id = _id;
@@ -18,9 +18,11 @@ public class DocumentModel {
 
     public String getName() { return this.name; }
     public String get_id() { return this._id; }
-    public String getStatus() { return this.status; }
+    public DocumentStatus getStatus() { return this.status; }
 
     public void setName(String name) { this.name = name; }
     public void set_id(String _id) { this._id = _id; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        this.status = DocumentStatus.get(status);
+    }
 }
